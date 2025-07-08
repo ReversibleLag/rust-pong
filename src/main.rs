@@ -25,7 +25,6 @@ pub fn main() {
 
     let mut rng = rand::rng();
     let mut diagonal = 0;
-    let mut ball_flipped = false;
     let mut left_rect = Rect::new(50, 350, 40, 80);
     let mut ball = Rect::new(viewport.w/2 - 10, viewport.h/2 - 10, 20, 20);
     let right_rect = Rect::new(710, 50, 40, 80);
@@ -78,6 +77,11 @@ pub fn main() {
             diagonal = rng.random_range(-5..5);
             towards_player = false;
         }
+        if right_rect.has_intersection(ball){
+            println!("Hit ai paddle");
+            diagonal = rng.random_range(-5..5);
+            towards_player = true;
+        }
         if towards_player {
             ball.x -= 3;
 
@@ -87,21 +91,19 @@ pub fn main() {
         }
         if !is_touching_edge(&ball, 800, 600) {
             
-            ball.y += diagonal;
-            if !ball_flipped
-            {
-                ball_flipped = true;
-            }else {
-                ball_flipped = false;
-            }
-        }
-
-        if ball_flipped {
-            println!("switch");
+            ball.y += diagonal; 
+        }else {
+            ball.y -= diagonal*2;
             diagonal = diagonal * -1;
-
-            println!("{}", diagonal);
         }
+        if is_touching_win(&ball, 800, 600){
+            println!("Win");
+
+        }else if is_touching_loss(&ball, 800, 600)
+        {
+            println!("Lose");
+        }
+
 
         canvas.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
@@ -110,4 +112,11 @@ pub fn main() {
 
 fn is_touching_edge(rect: &Rect, screen_width: i32, screen_height: i32) -> bool{
     rect.top() <= 0 || rect.bottom() > screen_height
+}
+
+fn is_touching_win(rect:&Rect, screen_width: i32, screen_height: i32) -> bool {
+    rect.right() > screen_width
+}
+fn is_touching_loss(rect:&Rect, screen_width: i32, screen_height: i32) -> bool {
+    rect.left() <= 0
 }
