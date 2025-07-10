@@ -96,6 +96,7 @@ pub fn main() {
         if !is_touching_edge(&ball, 800, 600) {
             
             ball.y += diagonal; 
+            right_rect.y += (diagonal + rng.random_range(0..1));
         }else {
             ball.y -= diagonal*2;
             diagonal = diagonal * -1;
@@ -113,6 +114,8 @@ pub fn main() {
             diagonal = rng.random_range(-5..5);
             towards_player = rng.random_bool(1.0/3.0);
             player_score += 1;
+            println!("Player Score: {}\nEnemy Score: {}", player_score, enemy_score);
+
         }else if is_touching_loss(&ball, 800, 600)
         {
             println!("Lose");
@@ -127,6 +130,7 @@ pub fn main() {
             diagonal = rng.random_range(-5..5);
             enemy_score += 1;
             towards_player = rng.random_bool(1.0/3.0);
+            println!("Player Score: {}\nEnemy Score: {}", player_score, enemy_score);
         }
 
 
